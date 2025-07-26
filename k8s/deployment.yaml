@@ -24,6 +24,24 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "100m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crasher
+  labels:
+    app: crasher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crasher
+  template:
+    metadata:
+      labels:
+        app: crasher
+    spec:
+      containers:
         - name: crasher
           image: alpine:latest
           command: ["sh", "-c"]
