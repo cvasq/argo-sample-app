@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: hello-world
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: hello
@@ -17,3 +17,31 @@ spec:
           image: nginx:1.25
           ports:
             - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+        - name: crasher
+          image: alpine:latest
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "[2024-01-15 10:30:15] INFO: Application startup initiated"
+              echo "[2024-01-15 10:30:16] INFO: Loading configuration from /etc/app/config.yaml"
+              echo "[2024-01-15 10:30:17] WARN: Database connection pool at 80% capacity"
+              echo "[2024-01-15 10:30:18] INFO: Starting background job processor"
+              echo "[2024-01-15 10:30:19] ERROR: Failed to connect to Redis cluster at redis-cluster:6379"
+              echo "[2024-01-15 10:30:20] ERROR: Critical service dependency unavailable"
+              echo "[2024-01-15 10:30:21] FATAL: Application cannot continue - shutting down"
+              sleep 2
+              kill -9 $$
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "25m"
+            limits:
+              memory: "64Mi"
+              cpu: "50m"
