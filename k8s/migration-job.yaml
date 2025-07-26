@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migration
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    spec:
+      containers:
+        - name: migration
+          image: alpine:latest
+          command: ["sh", "-c"]
+          args:
+            - |
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Starting database migration process"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Connecting to database at postgresql:5432"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Database connection established successfully"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Checking current schema version: v1.2.3"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Found 5 pending migrations to apply"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Applying migration 001_add_user_preferences.sql"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Migration 001 completed successfully"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Applying migration 002_add_audit_logs.sql"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Migration 002 completed successfully"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Applying migration 003_add_notification_settings.sql"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Migration 003 completed successfully"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Applying migration 004_add_user_roles.sql"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Migration 004 completed successfully"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Applying migration 005_add_api_keys.sql"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Migration failed - Column 'api_key_hash' does not exist in table 'api_keys'"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Expected column 'api_key_hash' to exist but found columns: [id, user_id, key_name, created_at]"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Migration 005_add_api_keys.sql failed with exit code 1"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] FATAL: Database migration process failed"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] FATAL: Rolling back completed migrations..."
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Rollback completed successfully"
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Migration process terminated with errors"
+              exit 1
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+      restartPolicy: Never
+  backoffLimit: 0 
