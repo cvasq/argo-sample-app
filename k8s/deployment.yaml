@@ -19,11 +19,11 @@ spec:
             - containerPort: 80
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "50m"
+              memory: "1Mi"
+              cpu: "1m"
             limits:
-              memory: "128Mi"
-              cpu: "100m"
+              memory: "2Mi"
+              cpu: "2m"
 ---
 apiVersion: apps/v1
 kind: Deployment
