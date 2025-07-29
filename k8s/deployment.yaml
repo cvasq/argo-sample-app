@@ -51,9 +51,6 @@ spec:
               echo "[2024-01-15 10:30:16] INFO: Loading configuration from /etc/app/config.yaml"
               echo "[2024-01-15 10:30:17] WARN: Database connection pool at 80% capacity"
               echo "[2024-01-15 10:30:18] INFO: Starting background job processor"
-              echo "[2024-01-15 10:30:19] ERROR: Failed to connect to Redis cluster at redis-cluster:6379"
-              echo "[2024-01-15 10:30:20] ERROR: Critical service dependency unavailable"
-              echo "[2024-01-15 10:30:21] FATAL: Application cannot continue - shutting down"
               echo "[2024-01-15 10:30:22] INFO: Service is now running and healthy"
               while true; do
                 echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Crasher service is running normally"
