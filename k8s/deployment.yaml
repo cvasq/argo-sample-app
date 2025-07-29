@@ -58,8 +58,8 @@ spec:
               done
           resources:
             requests:
-              memory: "1Mi"
-              cpu: "1m"
+              memory: "32Mi"
+              cpu: "10m"
             limits:
-              memory: "2Mi"
-              cpu: "2m"
+              memory: "64Mi"
+              cpu: "50m"
