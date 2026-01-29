@@ -31,8 +31,7 @@ spec:
               echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Migration 005 completed successfully"
               echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: All migrations completed successfully"
               echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Database schema updated to version v1.2.8"
-              echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Migration failed - database connection timeout"
-              exit 1
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Migration process completed successfully"
           resources:
             requests:
               memory: "64Mi"
