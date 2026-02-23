@@ -12,7 +12,7 @@ spec:
       labels:
         app: hello
       annotations:
-        restartedAt: "2026-02-23T20:00:00Z"
+        restartedAt: "2026-02-23T23:56:23Z"
     spec:
       containers:
         - name: hello
