@@ -11,6 +11,8 @@ spec:
     metadata:
       labels:
         app: hello
+      annotations:
+        restartedAt: "2026-02-23T20:00:00Z"
     spec:
       containers:
         - name: hello
