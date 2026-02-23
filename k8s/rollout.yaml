@@ -29,8 +29,6 @@ spec:
       maxSurge: 25%
       maxUnavailable: 0%
       steps:
-        - setCanaryScale:
-            weight: 100
         - pause:
             duration: 2m
         - setWeight: 100
