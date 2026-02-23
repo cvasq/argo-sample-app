@@ -26,7 +26,11 @@ spec:
               cpu: "100m"
   strategy:
     canary:
+      maxSurge: 25%
+      maxUnavailable: 0%
       steps:
-        - setWeight: 50
-        - pause: {duration: 600s}  # 10 minute pause
+        - setCanaryScale:
+            weight: 100
+        - pause:
+            duration: 2m
         - setWeight: 100
