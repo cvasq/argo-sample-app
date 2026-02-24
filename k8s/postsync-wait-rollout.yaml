@@ -11,12 +11,12 @@ spec:
       serviceAccountName: rollout-waiter
       containers:
         - name: wait-for-rollout
-          image: argoproj/kubectl-argo-rollouts:latest
+          image: quay.io/argoproj/argo-rollouts:v1.7.2
           command: ["/bin/sh", "-c"]
           args:
             - |
               echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Waiting for rollout hello-world to complete"
-              kubectl argo rollouts status hello-world -n default --watch --timeout 15m
+              kubectl-argo-rollouts status hello-world -n default --watch --timeout 15m
               echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Rollout completed successfully"
           resources:
             requests:
