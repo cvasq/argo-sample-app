@@ -11,13 +11,34 @@ spec:
       serviceAccountName: rollout-waiter
       containers:
         - name: wait-for-rollout
-          image: quay.io/argoproj/argo-rollouts:v1.7.2
-          command: ["/bin/sh", "-c"]
+          image: bitnami/kubectl:latest
+          command: ["/bin/bash", "-c"]
           args:
             - |
+              set -e
               echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Waiting for rollout hello-world to complete"
-              kubectl-argo-rollouts status hello-world -n default --watch --timeout 15m
-              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Rollout completed successfully"
+
+              # Wait for rollout to complete (check every 5 seconds for up to 15 minutes)
+              timeout=900
+              elapsed=0
+              while [ $elapsed -lt $timeout ]; do
+                phase=$(kubectl get rollout hello-world -n default -o jsonpath='{.status.phase}' 2>/dev/null || echo "Unknown")
+                echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Rollout phase: $phase"
+
+                if [ "$phase" = "Healthy" ]; then
+                  echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Rollout completed successfully"
+                  exit 0
+                elif [ "$phase" = "Degraded" ]; then
+                  echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Rollout is degraded"
+                  exit 1
+                fi
+
+                sleep 5
+                elapsed=$((elapsed + 5))
+              done
+
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] ERROR: Timeout waiting for rollout to complete"
+              exit 1
           resources:
             requests:
               memory: "32Mi"
