@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: hello-world
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+      annotations:
+        restartedAt: "2026-02-23T23:56:23Z"
+    spec:
+      containers:
+        - name: hello
+          image: nginx:1.28
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+  strategy:
+    canary:
+      maxSurge: 25%
+      maxUnavailable: 0%
+      steps:
+        - pause:
+            duration: 2m
+        - setWeight: 100

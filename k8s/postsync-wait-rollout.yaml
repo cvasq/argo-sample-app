@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  generateName: wait-for-rollout-
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  template:
+    spec:
+      serviceAccountName: rollout-waiter
+      containers:
+        - name: wait-for-rollout
+          image: argoproj/kubectl-argo-rollouts:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Waiting for rollout hello-world to complete"
+              kubectl argo rollouts status hello-world -n default --watch --timeout 15m
+              echo "[$(date '+%Y-%m-%d %H:%M:%S')] INFO: Rollout completed successfully"
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "10m"
+            limits:
+              memory: "64Mi"
+              cpu: "50m"
+      restartPolicy: Never
+  backoffLimit: 0
